@@ -1,3 +1,5 @@
 RewriteEngine On # Activer le module Rewrite
 RewriteRule ^activites/?$ activite.php [NC,L]
 RewriteRule ^[^/]+/(\d+)$ activite.php?id=$1
+RewriteRule ^utilisateurs/?$ utilisateur.php [NC,L]
+RewriteRule ^[^/]+/(\d+)$ utilisateur.php?id=$1

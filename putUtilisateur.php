@@ -1,13 +1,11 @@
 <?php
-$url = "http://127.0.0.1/Api/activite/5"; // modifier l'activite 5
+$url = "http://127.0.0.1/Api/utilisateur/2"; // modifier le utilisateur 2
 
-$data = array('titre' => 'T', 'date' => 'T', 'heure_debut' => 'T'
-  , 'heure_debut' => 'T'
-  , 'duree' => 'T'
-  , 'lieu' => 'T'
-  , 'niveau' => 'T'
-  , 'nbr_participant' => 'T'
-  , 'activite_terminee' => 'T');
+$data = array('identifiant' => 'T', 'nom' => 'T', 'prenom' => 'T'
+  , 'date_naissance' => 'T'
+  , 'email' => 'T'
+  , 'mot_de_passe' => 'T'
+);
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
