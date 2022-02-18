@@ -3,3 +3,4 @@ RewriteRule ^activites/?$ activite.php [NC,L]
 RewriteRule ^activites/(\d+)$ activite.php?id=$1
 RewriteRule ^utilisateurs/?$ utilisateur.php [NC,L]
 RewriteRule ^utilisateurs/(\d+)$ utilisateur.php?id=$1
+RewriteRule ^profil/(\d+)$ profil.php?id=$1

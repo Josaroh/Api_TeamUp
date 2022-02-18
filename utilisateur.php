@@ -52,7 +52,7 @@
   }
 
 
-  function AddUtilisateur()
+  function AddUtilisateurAvecProfil()
   {
     global $conn;
     $identifiant = $_POST["identifiant"];
@@ -210,7 +210,7 @@
       break;
     case 'POST':
       // Ajouter une activite
-      AddUtilisateur();
+      AddUtilisateurAvecProfil();
       break;
       case 'PUT':
       // Modifier un activite

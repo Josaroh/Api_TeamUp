@@ -1,5 +1,5 @@
 <?php
-$url = "http://127.0.0.1/Api/utilisateur/2"; // modifier le utilisateur 2
+$url = "http://127.0.0.1/Api/utilisateurs/2"; // modifier le utilisateur 2
 
 $data = array('identifiant' => 'T', 'nom' => 'T', 'prenom' => 'T'
   , 'date_naissance' => 'T'

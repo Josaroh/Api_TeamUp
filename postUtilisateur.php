@@ -1,5 +1,5 @@
 <?php
-  $url = 'http://127.0.0.1/Api/utilisateur';
+  $url = 'http://127.0.0.1/Api/utilisateurs';
   $data = array('identifiant' => 'Swanou', 'nom' => 'Bourgeois', 'prenom' => 'Swan', 'date_naissance' => '01/01/2002'
   , 'email' => 'swan.bourgeois@gmail.com'
   , 'mot_de_passe' => 'swan123'
