@@ -1,5 +1,5 @@
 <?php
-$url = "http://127.0.0.1/Api/utilisateur/5"; // supprimer l'utilisateur 5
+$url = "http://127.0.0.1/Api/utilisateurs/7"; // supprimer l'utilisateur 5
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");

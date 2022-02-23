@@ -1,9 +1,6 @@
 <?php
-  $url = 'http://127.0.0.1/Api/utilisateurs';
-  $data = array('identifiant' => 'Rooky', 'nom' => 'Vierat', 'prenom' => 'Nathan', 'date_naissance' => '01/01/2002'
-  , 'email' => 'nathan.vierat@gmail.com'
-  , 'mot_de_passe' => 'bruh'
-  );
+  $url = 'http://127.0.0.1/Api/teammates';
+  $data = array('activite_id' => 2, 'utilisateur_id' => '4');
   // utilisez 'http' même si vous envoyez la requête sur https:// ...
   $options = array(
     'http' => array(

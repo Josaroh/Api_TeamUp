@@ -71,7 +71,7 @@
     {
       $response=array(
         'status' => 1,
-        'status_message' =>'Produit ajoute avec succes.'
+        'status_message' =>'activite ajoute avec succes.'
       );
     }
     else
@@ -110,14 +110,14 @@
     {
       $response=array(
         'status' => 1,
-        'status_message' =>'Produit mis a jour avec succes.'
+        'status_message' =>'activite mis a jour avec succes.'
       );
     }
     else
     {
       $response=array(
         'status' => 0,
-        'status_message' =>'Echec de la mise a jour de produit. '. mysqli_error($conn)
+        'status_message' =>'Echec de la mise a jour d activite. '. mysqli_error($conn)
       );
       
     }
@@ -135,14 +135,14 @@
     {
       $response=array(
         'status' => 1,
-        'status_message' =>'Produit supprime avec succes.'
+        'status_message' =>'activite supprime avec succes.'
       );
     }
     else
     {
       $response=array(
         'status' => 0,
-        'status_message' =>'La suppression du produit a echoue. '. mysqli_error($conn)
+        'status_message' =>'La suppression du activite a echoue. '. mysqli_error($conn)
       );
     }
     header('Content-Type: application/json');

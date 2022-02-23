@@ -3,16 +3,14 @@
     include("db_connect.php");
     $request_method = $_SERVER["REQUEST_METHOD"];
 
-    //générateur d'id pour profil
-
 
   //LISTE DES FONCTIONS CONCERNANT L'ACTIVITE
 
 
-    function getUtilisateurs()
+    function getTeammates()
   {
     global $conn;
-    $query = "SELECT * FROM utilisateur";
+    $query = "SELECT * FROM activite_utilisateur";
     $response = array();
     $result = mysqli_query($conn, $query);
     
@@ -31,10 +29,10 @@
 }
 
 
-  function getUtilisateur($id=0)
+  function getTeammate($id=0)
   {
     global $conn;
-    $query = "SELECT * FROM utilisateur";
+    $query = "SELECT * FROM activite_utilisateur";
     if($id != 0)
     {
       $query .= " WHERE id=".$id." LIMIT 1";
@@ -52,64 +50,21 @@
   }
 
 
-  function AddUtilisateurAvecProfil()
+  function AddTeammates()
   {
     global $conn;
-    $identifiant = $_POST["identifiant"];
-    $nom = $_POST["nom"];
-    $prenom = $_POST["prenom"];
-    $dateNaissance = $_POST["date_naissance"];
-    $email = $_POST["email"];
-    $motDePasse = $_POST["mot_de_passe"];
-    
+    $activite_id = $_POST["activite_id"];
+    $utilisateur_id = $_POST["utilisateur_id"];
 
 
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s');
-
-    echo $queryProfil="INSERT INTO profil(localisation, perimetre, preference) VALUES('NULL','NULL','NULL')";
-    if(mysqli_query($conn, $queryProfil))
-    {
-      $response=array(
-        'status' => 1,
-        'status_message' =>'utilisateur ajoute avec succes.'
-      );
-    }
-    else
-    {
-      $response=array(
-        'status' => 0,
-        'status_message' =>'ERREUR!.'. mysqli_error($conn)
-      );
-    }
- //   header('Content-Type: application/json');
-  //  echo json_encode($response);
-
-
-    $queryProfil="SELECT * FROM profil ORDER BY id DESC LIMIT 1";
-
-    $response = array();
-    $result = mysqli_query($conn, $queryProfil);
-
-    while($row = mysqli_fetch_array($result))
-    {
-      $response[] = $row;
-    }
-
-    $profilId=$response[0];
-
-
-    $ID=$profilId[0];
-
-
-
-
-    echo $query="INSERT INTO utilisateur(identifiant, nom, prenom, date_naissance, email, mot_de_passe,profil_id) VALUES('".$identifiant."', '".$nom."', '".$prenom."', '".$dateNaissance."', '".$email."', '".$motDePasse."', '".$ID."')";
+    echo $query="INSERT INTO activite_utilisateur(activite_id, utilisateur_id) VALUES('".$activite_id."', '".$utilisateur_id."')";
     if(mysqli_query($conn, $query))
     {
       $response=array(
         'status' => 1,
-        'status_message' =>'utilisateur ajoute avec succes.'
+        'status_message' =>'teammate ajoute avec succes.'
       );
     }
     else
@@ -123,38 +78,33 @@
     echo json_encode($response);
   }
 
-
-  function updateUtilisateur($id)
+  function updateTeammate($id)
   {
     global $conn;
     $_PUT = array(); //tableau qui va contenir les données reçues
     parse_str(file_get_contents('php://input'), $_PUT);
 
-    $identifiant = $_PUT["identifiant"];
-    $nom = $_PUT["nom"];
-    $prenom = $_PUT["prenom"];
-    $dateNaissance = $_PUT["date_naissance"];
-    $email = $_PUT["email"];
-    $motDePasse = $_PUT["mot_de_passe"];
-  
+    $activite_id = $_POST["activite_id"];
+    $utilisateur_id = $_POST["utilisateur_id"];
+
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s')
 
     //construire la requête SQL
-    $query="UPDATE utilisateur SET identifiant='".$identifiant."', nom='".$nom."', prenom='".$prenom."', date_naissance='".$dateNaissance."', email='".$email."' , mot_de_passe='".$motDePasse."'WHERE id=".$id;
+    $query="UPDATE activite_utilisateur SET activite_id='".$activite_id."', utilisateur_id='".$utilisateur_id."'WHERE id=".$id;
     
     if(mysqli_query($conn, $query))
     {
       $response=array(
         'status' => 1,
-        'status_message' =>'Utilisateur mis a jour avec succes.'
+        'status_message' =>'teammate mis a jour avec succes.'
       );
     }
     else
     {
       $response=array(
         'status' => 0,
-        'status_message' =>'Echec de la mise a jour de l utilisateur. '. mysqli_error($conn)
+        'status_message' =>'Echec de la mise a jour d activite. '. mysqli_error($conn)
       );
       
     }
@@ -164,22 +114,24 @@
   }
 
 
-  function deleteUtilisateur($id)
+  function deleteTeammate($idActivite,$idUtilisateur)
   {
     global $conn;
-    $query = "DELETE FROM utilisateur WHERE id=".$id;
+    $query = "DELETE FROM activite_utilisateur WHERE activite_id=".$idActivite." AND utilisateur_id=".$idUtilisateur;
     if(mysqli_query($conn, $query))
     {
+      print_r(4);
       $response=array(
         'status' => 1,
-        'status_message' =>'Utilisateur supprime avec succes.'
+        'status_message' =>'teamamte supprime avec succes.'
       );
     }
     else
     {
+      print_r(5);
       $response=array(
         'status' => 0,
-        'status_message' =>'La suppression du utilisateur a echoue. '. mysqli_error($conn)
+        'status_message' =>'La suppression du teammate a echoue. '. mysqli_error($conn)
       );
     }
     header('Content-Type: application/json');
@@ -196,12 +148,12 @@
       {
         // Récupérer un seul produit
         $id = intval($_GET["id"]);
-        getUtilisateur($id);
+        getTeammate($id);
       }
       else
       {
         // Récupérer tous les produits
-        getUtilisateurs();
+        getTeammates();
       }
       break;
     default:
@@ -210,17 +162,18 @@
       break;
     case 'POST':
       // Ajouter une activite
-      AddUtilisateurAvecProfil();
+      AddTeammates();
       break;
       case 'PUT':
       // Modifier un activite
       $id = intval($_GET["id"]);
-      updateUtilisateur($id);
+      updateTeammate($id);
       break;
       case 'DELETE':
         // Supprimer un produit
-        $id = intval($_GET["id"]);
-        deleteUtilisateur($id);
+        $idActivite = intval($_GET["idActivite"]);
+        $idUtilisateur = intval($_GET["idUtilisateur"]);
+        deleteTeammate($idActivite,$idUtilisateur);
         break;
     }
 

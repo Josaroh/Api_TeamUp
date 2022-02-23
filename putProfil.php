@@ -1,11 +1,7 @@
 <?php
-$url = "http://127.0.0.1/Api/utilisateurs/7"; // modifier le utilisateur 2
+$url = "http://127.0.0.1/Api/profils/40"; // modifier le profil 40
 
-$data = array('identifiant' => 'T', 'nom' => 'T', 'prenom' => 'T'
-  , 'date_naissance' => 'T'
-  , 'email' => 'T'
-  , 'mot_de_passe' => 'T'
-);
+$data = array('localisation' => 'T', 'perimetre' => 'T', 'preference' => 'T');
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");

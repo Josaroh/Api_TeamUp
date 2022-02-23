@@ -1,9 +1,6 @@
 <?php
-  $url = 'http://127.0.0.1/Api/utilisateurs';
-  $data = array('identifiant' => 'Rooky', 'nom' => 'Vierat', 'prenom' => 'Nathan', 'date_naissance' => '01/01/2002'
-  , 'email' => 'nathan.vierat@gmail.com'
-  , 'mot_de_passe' => 'bruh'
-  );
+  $url = 'http://127.0.0.1/Api/activitesPayantes';
+  $data = array('id' => 5, 'tarif' => '15');
   // utilisez 'http' même si vous envoyez la requête sur https:// ...
   $options = array(
     'http' => array(

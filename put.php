@@ -1,5 +1,5 @@
 <?php
-$url = "http://127.0.0.1/Api/activite/5"; // modifier l'activite 5
+$url = "http://127.0.0.1/Api/activites/5"; // modifier l'activite 5
 
 $data = array('titre' => 'T', 'date' => 'T', 'heure_debut' => 'T'
   , 'heure_debut' => 'T'
