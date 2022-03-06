@@ -51,6 +51,30 @@
     echo json_encode($response, JSON_PRETTY_PRINT);
   }
 
+  function getUtilisateurIdentifiant($identifiant)
+  {
+    global $conn;
+    $query = "SELECT * FROM utilisateur";
+    
+    $query .= " WHERE identifiant="."'".$identifiant."'";
+    
+
+ 
+    $response = array();
+    $result = mysqli_query($conn, $query);
+
+
+
+    while($row = mysqli_fetch_array($result))
+    {
+      $response[] = $row;
+    }
+
+
+    header('Content-Type: application/json');
+    echo json_encode($response, JSON_PRETTY_PRINT);
+  }
+
 
   function AddUtilisateurAvecProfil()
   {
@@ -197,6 +221,10 @@
         // Récupérer un seul produit
         $id = intval($_GET["id"]);
         getUtilisateur($id);
+      }
+      else if(!empty($_GET["identifiant"])){
+        $identifiant = $_GET["identifiant"];
+        getUtilisateurIdentifiant($identifiant);
       }
       else
       {
