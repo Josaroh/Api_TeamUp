@@ -35,7 +35,7 @@
     $query = "SELECT * FROM activite_utilisateur";
     if($id != 0)
     {
-      $query .= " WHERE id=".$id." LIMIT 1";
+      $query .= " WHERE activite_id=".$id;
     }
     $response = array();
     $result = mysqli_query($conn, $query);
