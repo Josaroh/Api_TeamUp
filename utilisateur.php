@@ -16,7 +16,7 @@
     $response = array();
     $result = mysqli_query($conn, $query);
     
-    while($row = mysqli_fetch_array($result))
+    while($row = mysqli_fetch_assoc($result))
     {
     
       $response[] = $row;
@@ -42,7 +42,7 @@
     $response = array();
     $result = mysqli_query($conn, $query);
 
-    while($row = mysqli_fetch_array($result))
+    while($row = mysqli_fetch_assoc($result))
     {
       $response[] = $row;
     }
@@ -65,7 +65,7 @@
 
 
 
-    while($row = mysqli_fetch_array($result))
+    while($row = mysqli_fetch_assoc($result))
     {
       $response[] = $row;
     }
@@ -115,7 +115,7 @@
     $response = array();
     $result = mysqli_query($conn, $queryProfil);
 
-    while($row = mysqli_fetch_array($result))
+    while($row = mysqli_fetch_assoc($result))
     {
       $response[] = $row;
     }
