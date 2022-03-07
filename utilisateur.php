@@ -79,12 +79,19 @@
   function AddUtilisateurAvecProfil()
   {
     global $conn;
-    $identifiant = $_POST["identifiant"];
-    $nom = $_POST["nom"];
-    $prenom = $_POST["prenom"];
-    $dateNaissance = $_POST["date_naissance"];
-    $email = $_POST["email"];
-    $motDePasse = $_POST["mot_de_passe"];
+
+    $data = json_decode(file_get_contents('php://input'), true);
+
+
+    $identifiant = $data->{'identifiant'};
+    $nom = $data->{'nom'};
+    $prenom = $data->{'prenom'};
+    $dateNaissance = $data->{'date_naissance'};
+    $email = $data->{'email'};
+    $motDePasse = $data->{'mot_de_passe'};
+    
+
+    
     
 
 
@@ -115,7 +122,7 @@
     $response = array();
     $result = mysqli_query($conn, $queryProfil);
 
-    while($row = mysqli_fetch_assoc($result))
+    while($row = mysqli_fetch_array($result))
     {
       $response[] = $row;
     }
@@ -145,6 +152,8 @@
     }
     header('Content-Type: application/json');
     echo json_encode($response);
+
+  
   }
 
 
