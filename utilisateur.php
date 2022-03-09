@@ -1,12 +1,55 @@
 <?php
+
+//MAIN.CPP
     // Se connecter à la base de données
     include("db_connect.php");
     $request_method = $_SERVER["REQUEST_METHOD"];
 
     //générateur d'id pour profil
 
+    switch($request_method)
+  {
+    case 'GET':
+      if(!empty($_GET["id"]))
+      {
+        // Récupérer un seul produit
+        $id = intval($_GET["id"]);
+        getUtilisateur($id);
+      }
+      else if(!empty($_GET["identifiant"])){
+        $identifiant = $_GET["identifiant"];
+        getUtilisateurIdentifiant($identifiant);
+      }
+      else
+      {
+        // Récupérer tous les produits
+        getUtilisateurs();
+      }
+      break;
+    default:
+      // Requête invalide
+      header("HTTP/1.0 405 Method Not Allowed");
+      break;
+    case 'POST':
+      // Ajouter une activite
+      AddUtilisateurAvecProfil();
+      break;
+      case 'PUT':
+      // Modifier un activite
+      $id = intval($_GET["id"]);
+      updateUtilisateur($id);
+      break;
+      case 'DELETE':
+        // Supprimer un produit
+        $id = intval($_GET["id"]);
+        deleteUtilisateur($id);
+        break;
+    }
 
-  //LISTE DES FONCTIONS CONCERNANT L'ACTIVITE
+//END MAIN.CPP
+
+
+  //LISTE DES FONCTIONS CONCERNANT L'Utilisateur
 
 
     function getUtilisateurs()
@@ -80,9 +123,14 @@
   {
     global $conn;
 
-    $data = json_decode(file_get_contents('php://input'), true);
+    $donnees = file_get_contents('php://input');
+    echo "-------------------------";
+   
 
+    $data = json_decode($donnees);
+    var_dump($data);
 
+    echo "-------------------------";
     $identifiant = $data->{'identifiant'};
     $nom = $data->{'nom'};
     $prenom = $data->{'prenom'};
@@ -160,15 +208,21 @@
   function updateUtilisateur($id)
   {
     global $conn;
-    $_PUT = array(); //tableau qui va contenir les données reçues
-    parse_str(file_get_contents('php://input'), $_PUT);
 
-    $identifiant = $_PUT["identifiant"];
-    $nom = $_PUT["nom"];
-    $prenom = $_PUT["prenom"];
-    $dateNaissance = $_PUT["date_naissance"];
-    $email = $_PUT["email"];
-    $motDePasse = $_PUT["mot_de_passe"];
+    $donnees=file_get_contents('php://input');
+    var_dump($donnees);
+    // parse_str(file_get_contents('php://input'), $_PUT);
+
+    $data = json_decode($donnees);
+
+  
+
+    $identifiant = $data->{'identifiant'};
+    $nom = $data->{'nom'};
+    $prenom = $data->{'prenom'};
+    $dateNaissance = $data->{'date_naissance'};
+    $email = $data->{'email'};
+    $motDePasse = $data->{'mot_de_passe'};
   
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s')
@@ -192,7 +246,7 @@
       
     }
     
-    header('Content-Type: application/json');
+   
     echo json_encode($response);
   }
 
@@ -222,43 +276,6 @@
 
 
 
-  switch($request_method)
-  {
-    case 'GET':
-      if(!empty($_GET["id"]))
-      {
-        // Récupérer un seul produit
-        $id = intval($_GET["id"]);
-        getUtilisateur($id);
-      }
-      else if(!empty($_GET["identifiant"])){
-        $identifiant = $_GET["identifiant"];
-        getUtilisateurIdentifiant($identifiant);
-      }
-      else
-      {
-        // Récupérer tous les produits
-        getUtilisateurs();
-      }
-      break;
-    default:
-      // Requête invalide
-      header("HTTP/1.0 405 Method Not Allowed");
-      break;
-    case 'POST':
-      // Ajouter une activite
-      AddUtilisateurAvecProfil();
-      break;
-      case 'PUT':
-      // Modifier un activite
-      $id = intval($_GET["id"]);
-      updateUtilisateur($id);
-      break;
-      case 'DELETE':
-        // Supprimer un produit
-        $id = intval($_GET["id"]);
-        deleteUtilisateur($id);
-        break;
-    }
+  
 
 ?>

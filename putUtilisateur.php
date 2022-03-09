@@ -1,19 +1,32 @@
 <?php
-$url = "http://127.0.0.1/Api/utilisateurs/7"; // modifier le utilisateur 2
 
-$data = array('identifiant' => 'T', 'nom' => 'T', 'prenom' => 'T'
-  , 'date_naissance' => 'T'
-  , 'email' => 'T'
-  , 'mot_de_passe' => 'T'
-);
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
-$response = curl_exec($ch);
-var_dump($response);
-if (!$response) 
-{
-    return false;
-}
+  // API URL
+  $url = 'http://lakartxela.iutbayonne.univ-pau.fr/~nvgouvet/PHP/S4/Api/utilisateurs/7';
+
+  // Create a new cURL resource
+  $ch = curl_init($url);
+  
+  // Setup request to send json via POST
+  $data = array(
+    'identifiant' => 'x', 'nom' => 'x', 'prenom' => 'x', 'date_naissance' => '01/01/2002'
+    , 'email' => 'x.vierat@gmail.com'
+    , 'mot_de_passe' => 'x'
+  );
+  $payload = json_encode($data);
+  // Attach encoded JSON string to the POST fields
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+  
+  // Set the content type to application/json
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+  
+  // Return response instead of outputting
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  
+  // Execute the POST request
+  $result = curl_exec($ch);
+  echo($result);
+  
+  // Close cURL resource
+  curl_close($ch);
 ?>

@@ -1,22 +1,36 @@
 <?php
-  $url = 'http://127.0.0.1/Api/activite';
-  $data = array('a_pour_team_leader_id' => '1', 'titre' => 'HH', 'date' => 'HH', 'heure_debut' => 'H'
+ 
+  // API URL
+$url = 'http://127.0.0.1/Api/activites';
+
+// Create a new cURL resource
+$ch = curl_init($url);
+
+// Setup request to send json via POST
+$data = array('a_pour_team_leader_id' => '1', 'titre' => 'HH', 'date' => 'HH', 'heure_debut' => 'H'
   , 'heure_debut' => 'H'
-  , 'duree' => 'H'
+  , 'heure_fin' => 'waw'
   , 'lieu' => 'H'
   , 'niveau' => 'H'
   , 'nbr_participant' => 'H'
   , 'activite_terminee' => 'H');
-  // utilisez 'http' même si vous envoyez la requête sur https:// ...
-  $options = array(
-    'http' => array(
-      'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-      'method'  => 'POST',
-      'content' => http_build_query($data)
-    )
-  );
-  $context  = stream_context_create($options);
-  $result = file_get_contents($url, false, $context);
-  if ($result === FALSE) { /* Handle error */ }
-  var_dump($result);
+
+
+$payload = json_encode( $data);
+// Attach encoded JSON string to the POST fields
+curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+
+// Set the content type to application/json
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+// Return response instead of outputting
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+// Execute the POST request
+$result = curl_exec($ch);
+echo($result);
+
+// Close cURL resource
+curl_close($ch);
+
 ?>

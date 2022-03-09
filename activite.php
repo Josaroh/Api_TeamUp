@@ -3,6 +3,41 @@
     include("db_connect.php");
     $request_method = $_SERVER["REQUEST_METHOD"];
 
+    switch($request_method)
+  {
+    case 'GET':
+      if(!empty($_GET["id"]))
+      {
+        // Récupérer un seul produit
+        $id = intval($_GET["id"]);
+        getActivite($id);
+      }
+      else
+      {
+        // Récupérer tous les produits
+        getActivites();
+      }
+      break;
+    default:
+      // Requête invalide
+      header("HTTP/1.0 405 Method Not Allowed");
+      break;
+    case 'POST':
+      // Ajouter une activite
+      AddActivite();
+      break;
+      case 'PUT':
+      // Modifier un activite
+      $id = intval($_GET["id"]);
+      updateActivite($id);
+      break;
+      case 'DELETE':
+        // Supprimer un produit
+        $id = intval($_GET["id"]);
+        deleteActivite($id);
+        break;
+    }
+
 
   //LISTE DES FONCTIONS CONCERNANT L'ACTIVITE
 
@@ -46,6 +81,8 @@
     }
 
     header('Content-Type: application/json');
+
+    print_r($response);
     echo json_encode($response, JSON_PRETTY_PRINT);
   }
 
@@ -53,20 +90,26 @@
   function AddActivite()
   {
     global $conn;
-    $a_pour_team_leader_id = $_POST["a_pour_team_leader_id"];
-    $titre = $_POST["titre"];
-    $date = $_POST["date"];
-    $heure_debut = $_POST["heure_debut"];
-    $duree = $_POST["duree"];
-    $lieu = $_POST["lieu"];
-    $niveau = $_POST["niveau"];
-    $nbr_participant = $_POST["nbr_participant"];
-    $activite_terminee = $_POST["activite_terminee"];
+
+
+    $donnees = file_get_contents('php://input');
+
+    $data = json_decode($donnees);
+
+    $a_pour_team_leader_id = $data->{'a_pour_team_leader_id'};
+    $titre = $data->{'titre'};
+    $date = $data->{'date'};
+    $heure_debut = $data->{'heure_debut'};
+    $heure_fin = $data->{'heure_fin'};
+    $lieu = $data->{'lieu'};
+    $niveau = $data->{'niveau'};
+    $nbr_participant = $data->{'nbr_participant'};
+    $activite_terminee = $data->{'activite_terminee'};
 
 
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s');
-    echo $query="INSERT INTO activite(a_pour_team_leader_id, titre, date, heure_debut, duree, lieu,niveau,nbr_participant,activite_terminee) VALUES('".$a_pour_team_leader_id."', '".$titre."', '".$date."', '".$heure_debut."', '".$duree."', '".$lieu."', '".$niveau."', '".$nbr_participant."', '".$activite_terminee."')";
+    echo $query="INSERT INTO activite(a_pour_team_leader_id, titre, date, heure_debut, heure_fin, lieu,niveau,nbr_participant,activite_terminee) VALUES('".$a_pour_team_leader_id."', '".$titre."', '".$date."', '".$heure_debut."', '".$heure_fin."', '".$lieu."', '".$niveau."', '".$nbr_participant."', '".$activite_terminee."')";
     if(mysqli_query($conn, $query))
     {
       $response=array(
@@ -81,30 +124,34 @@
         'status_message' =>'ERREUR!.'. mysqli_error($conn)
       );
     }
-    header('Content-Type: application/json');
+
     echo json_encode($response);
   }
 
   function updateActivite($id)
   {
     global $conn;
-    $_PUT = array(); //tableau qui va contenir les données reçues
-    parse_str(file_get_contents('php://input'), $_PUT);
+    $donnees=file_get_contents('php://input');
+    var_dump($donnees);
+    // parse_str(file_get_contents('php://input'), $_PUT);
 
-    $titre = $_PUT["titre"];
-    $date = $_PUT["date"];
-    $heure_debut = $_PUT["heure_debut"];
-    $duree = $_PUT["duree"];
-    $lieu = $_PUT["lieu"];
-    $niveau = $_PUT["niveau"];
-    $nbr_participant = $_PUT["nbr_participant"];
-    $activite_terminee = $_PUT["activite_terminee"];
+    $data = json_decode($donnees);
+
+    $a_pour_team_leader_id = $data->{'a_pour_team_leader_id'};
+    $titre = $data->{'titre'};
+    $date = $data->{'date'};
+    $heure_debut = $data->{'heure_debut'};
+    $heure_fin = $data->{'heure_fin'};
+    $lieu = $data->{'lieu'};
+    $niveau = $data->{'niveau'};
+    $nbr_participant = $data->{'nbr_participant'};
+    $activite_terminee = $data->{'activite_terminee'};
 
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s')
 
     //construire la requête SQL
-    $query="UPDATE activite SET titre='".$titre."', date='".$date."', heure_debut='".$heure_debut."', duree='".$duree."', lieu='".$lieu."' , niveau='".$niveau."', nbr_participant='".$nbr_participant."', activite_terminee='".$activite_terminee."'WHERE id=".$id;
+    $query="UPDATE activite SET titre='".$titre."', date='".$date."', heure_debut='".$heure_debut."', duree='".$heure_fin."', lieu='".$lieu."' , niveau='".$niveau."', nbr_participant='".$nbr_participant."', activite_terminee='".$activite_terminee."'WHERE id=".$id;
     
     if(mysqli_query($conn, $query))
     {
@@ -122,7 +169,6 @@
       
     }
     
-    header('Content-Type: application/json');
     echo json_encode($response);
   }
 
@@ -145,46 +191,8 @@
         'status_message' =>'La suppression du activite a echoue. '. mysqli_error($conn)
       );
     }
-    header('Content-Type: application/json');
     echo json_encode($response);
   }
 
-
-
-
-  switch($request_method)
-  {
-    case 'GET':
-      if(!empty($_GET["id"]))
-      {
-        // Récupérer un seul produit
-        $id = intval($_GET["id"]);
-        getActivite($id);
-      }
-      else
-      {
-        // Récupérer tous les produits
-        getActivites();
-      }
-      break;
-    default:
-      // Requête invalide
-      header("HTTP/1.0 405 Method Not Allowed");
-      break;
-    case 'POST':
-      // Ajouter une activite
-      AddActivite();
-      break;
-      case 'PUT':
-      // Modifier un activite
-      $id = intval($_GET["id"]);
-      updateActivite($id);
-      break;
-      case 'DELETE':
-        // Supprimer un produit
-        $id = intval($_GET["id"]);
-        deleteActivite($id);
-        break;
-    }
 
 ?>

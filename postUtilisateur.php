@@ -1,7 +1,7 @@
 <?php
 
   // API URL
-$url = 'http://127.0.0.1/Api/utilisateurs';
+$url = 'http://lakartxela.iutbayonne.univ-pau.fr/~nvgouvet/PHP/S4/Api/utilisateurs';
 
 // Create a new cURL resource
 $ch = curl_init($url);
@@ -12,8 +12,7 @@ $data = array(
   , 'email' => 'y.vierat@gmail.com'
   , 'mot_de_passe' => 'y'
 );
-$payload = json_encode(array("user" => $data));
-
+$payload = json_encode( $data);
 // Attach encoded JSON string to the POST fields
 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 
@@ -25,6 +24,7 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 // Execute the POST request
 $result = curl_exec($ch);
+echo($result);
 
 // Close cURL resource
 curl_close($ch);

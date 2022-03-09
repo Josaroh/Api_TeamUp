@@ -3,6 +3,41 @@
     include("db_connect.php");
     $request_method = $_SERVER["REQUEST_METHOD"];
 
+    switch($request_method)
+  {
+    case 'GET':
+      if(!empty($_GET["id"]))
+      {
+        // Récupérer un seul produit
+        $id = intval($_GET["id"]);
+        getActivitePayante($id);
+      }
+      else
+      {
+        // Récupérer tous les produits
+        getActivitesPayantes();
+      }
+      break;
+    default:
+      // Requête invalide
+      header("HTTP/1.0 405 Method Not Allowed");
+      break;
+    case 'POST':
+      // Ajouter une activite
+      AddActivitePayante();
+      break;
+      case 'PUT':
+      // Modifier un activite
+      $id = intval($_GET["id"]);
+      updateActivitePayante($id);
+      break;
+      case 'DELETE':
+        // Supprimer un produit
+        $id = intval($_GET["id"]);
+        deleteActivitePayante($id);
+        break;
+    }
+
 
   //LISTE DES FONCTIONS CONCERNANT L'ACTIVITE
 
@@ -53,8 +88,14 @@
   function AddActivitePayante()
   {
     global $conn;
-    $id = $_POST["id"];
-    $tarif = $_POST["tarif"];
+
+    $donnees = file_get_contents('php://input');
+
+    $data = json_decode($donnees);
+
+
+    $id = $data->{'id'};
+    $tarif = $data->{'tarif'};
 
 
     //$created = date('Y-m-d H:i:s');
@@ -74,18 +115,20 @@
         'status_message' =>'ERREUR!.'. mysqli_error($conn)
       );
     }
-    header('Content-Type: application/json');
+
     echo json_encode($response);
   }
 
   function updateActivitePayante($id)
   {
     global $conn;
-    $_PUT = array(); //tableau qui va contenir les données reçues
-    parse_str(file_get_contents('php://input'), $_PUT);
+    $donnees = file_get_contents('php://input');
 
-    $id = $_PUT["id"];
-    $tarif = $_PUT["tarif"];
+    $data = json_decode($donnees);
+
+
+    $id = $data->{'id'};
+    $tarif = $data->{'tarif'};
 
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s')
@@ -109,7 +152,7 @@
       
     }
     
-    header('Content-Type: application/json');
+
     echo json_encode($response);
   }
 
@@ -136,42 +179,5 @@
     echo json_encode($response);
   }
 
-
-
-
-  switch($request_method)
-  {
-    case 'GET':
-      if(!empty($_GET["id"]))
-      {
-        // Récupérer un seul produit
-        $id = intval($_GET["id"]);
-        getActivitePayante($id);
-      }
-      else
-      {
-        // Récupérer tous les produits
-        getActivitesPayantes();
-      }
-      break;
-    default:
-      // Requête invalide
-      header("HTTP/1.0 405 Method Not Allowed");
-      break;
-    case 'POST':
-      // Ajouter une activite
-      AddActivitePayante();
-      break;
-      case 'PUT':
-      // Modifier un activite
-      $id = intval($_GET["id"]);
-      updateActivitePayante($id);
-      break;
-      case 'DELETE':
-        // Supprimer un produit
-        $id = intval($_GET["id"]);
-        deleteActivitePayante($id);
-        break;
-    }
 
 ?>

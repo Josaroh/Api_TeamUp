@@ -3,6 +3,41 @@
     include("db_connect.php");
     $request_method = $_SERVER["REQUEST_METHOD"];
 
+    switch($request_method)
+  {
+    case 'GET':
+      if(!empty($_GET["id"]))
+      {
+        // Récupérer un seul produit
+        $id = intval($_GET["id"]);
+        getProfil($id);
+      }
+      else
+      {
+        // Récupérer tous les produits
+        getProfils();
+      }
+      break;
+    default:
+      // Requête invalide
+      header("HTTP/1.0 405 Method Not Allowed");
+      break;
+    case 'POST':
+      // Ajouter une activite
+      AddProfil();
+      break;
+      case 'PUT':
+      // Modifier un activite
+      $id = intval($_GET["id"]);
+      updateProfil($id);
+      break;
+      case 'DELETE':
+        // Supprimer un produit
+        $id = intval($_GET["id"]);
+        deleteProfil($id);
+        break;
+    }
+
 
   //LISTE DES FONCTIONS CONCERNANT L'ACTIVITE
 
@@ -53,9 +88,20 @@
   function AddProfil()
   {
     global $conn;
-    $localisation = $_POST["localisation"];
-    $perimetre = $_POST["perimetre"];
-    $preference = $_POST["preference"];
+
+
+    $donnees = file_get_contents('php://input');
+    echo "-------------------------";
+   
+
+    $data = json_decode($donnees);
+    var_dump($data);
+
+    echo "-------------------------";
+
+    $localisation = $data->{'localisation'};
+    $perimetre = $data->{'perimetre'};
+    $preference = $data->{'preference'};
     
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s');
@@ -81,13 +127,18 @@
   function updateProfil($id)
   {
     global $conn;
-    $_PUT = array(); //tableau qui va contenir les données reçues
-    parse_str(file_get_contents('php://input'), $_PUT);
 
+    $donnees = file_get_contents('php://input');
+    echo "-------------------------";
+   
 
-    $localisation = $_PUT["localisation"];
-    $perimetre = $_PUT["perimetre"];
-    $preference = $_PUT["preference"];
+    $data = json_decode($donnees);
+    var_dump($data);
+
+    echo "-------------------------";
+    $localisation = $data->{'localisation'};
+    $perimetre = $data->{'perimetre'};
+    $preference = $data->{'preference'};
 
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s')
@@ -111,7 +162,6 @@
       
     }
     
-    header('Content-Type: application/json');
     echo json_encode($response);
   }
 
@@ -140,40 +190,5 @@
 
 
 
-
-  switch($request_method)
-  {
-    case 'GET':
-      if(!empty($_GET["id"]))
-      {
-        // Récupérer un seul produit
-        $id = intval($_GET["id"]);
-        getProfil($id);
-      }
-      else
-      {
-        // Récupérer tous les produits
-        getProfils();
-      }
-      break;
-    default:
-      // Requête invalide
-      header("HTTP/1.0 405 Method Not Allowed");
-      break;
-    case 'POST':
-      // Ajouter une activite
-      AddProfil();
-      break;
-      case 'PUT':
-      // Modifier un activite
-      $id = intval($_GET["id"]);
-      updateProfil($id);
-      break;
-      case 'DELETE':
-        // Supprimer un produit
-        $id = intval($_GET["id"]);
-        deleteProfil($id);
-        break;
-    }
 
 ?>

@@ -3,6 +3,47 @@
     include("db_connect.php");
     $request_method = $_SERVER["REQUEST_METHOD"];
 
+    switch($request_method)
+  {
+    case 'GET':
+
+      if(!empty($_GET["idActivite"]))
+      {
+        // Récupérer un seul produit
+        $idActivite = intval($_GET["idActivite"]);
+        getTeammateActivite($idActivite);
+      }
+      else if(!empty($_GET["idUtilisateur"])){
+        $idUtilisateur = $_GET["idUtilisateur"];
+        getTeammateUtilisateur($idUtilisateur);
+      }
+      else
+      {
+        // Récupérer tous les produits
+        getTeammates();
+      }
+      break;
+    default:
+      // Requête invalide
+      header("HTTP/1.0 405 Method Not Allowed");
+      break;
+    case 'POST':
+      // Ajouter une activite
+      AddTeammates();
+      break;
+      case 'PUT':
+      // Modifier un activite
+      $id = intval($_GET["id"]);
+      updateTeammate($id);
+      break;
+      case 'DELETE':
+        // Supprimer un produit
+        $idActivite = intval($_GET["idActivite"]);
+        $idUtilisateur = intval($_GET["idUtilisateur"]);
+        deleteTeammate($idActivite,$idUtilisateur);
+        break;
+    }
+
 
   //LISTE DES FONCTIONS CONCERNANT L'ACTIVITE
 
@@ -29,7 +70,7 @@
 }
 
 
-  function getTeammate($id=0)
+  function getTeammateActivite($id=0)
   {
     global $conn;
     $query = "SELECT * FROM activite_utilisateur";
@@ -49,12 +90,37 @@
     echo json_encode($response, JSON_PRETTY_PRINT);
   }
 
+  function getTeammateUtilisateur($id=0)
+  {
+    global $conn;
+    $query = "SELECT * FROM activite_utilisateur";
+    if($id != 0)
+    {
+      $query .= " WHERE utilisateur_id=".$id;
+    }
+    $response = array();
+    $result = mysqli_query($conn, $query);
+
+    while($row = mysqli_fetch_assoc($result))
+    {
+      $response[] = $row;
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($response, JSON_PRETTY_PRINT);
+  }
+
 
   function AddTeammates()
   {
     global $conn;
-    $activite_id = $_POST["activite_id"];
-    $utilisateur_id = $_POST["utilisateur_id"];
+
+    $donnees = file_get_contents('php://input');
+
+    $data = json_decode($donnees);
+
+    $activite_id = $data->{'activite_id'};
+    $utilisateur_id = $data->{'utilisateur_id'};
 
 
     //$created = date('Y-m-d H:i:s');
@@ -74,18 +140,19 @@
         'status_message' =>'ERREUR!.'. mysqli_error($conn)
       );
     }
-    header('Content-Type: application/json');
     echo json_encode($response);
   }
 
   function updateTeammate($id)
   {
     global $conn;
-    $_PUT = array(); //tableau qui va contenir les données reçues
-    parse_str(file_get_contents('php://input'), $_PUT);
+    
+    $donnees = file_get_contents('php://input');
 
-    $activite_id = $_POST["activite_id"];
-    $utilisateur_id = $_POST["utilisateur_id"];
+    $data = json_decode($donnees);
+
+    $activite_id = $data->{'activite_id'};
+    $utilisateur_id = $data->{'utilisateur_id'};
 
     //$created = date('Y-m-d H:i:s');
     //$modified = date('Y-m-d H:i:s')
@@ -134,47 +201,8 @@
         'status_message' =>'La suppression du teammate a echoue. '. mysqli_error($conn)
       );
     }
-    header('Content-Type: application/json');
     echo json_encode($response);
   }
 
-
-
-
-  switch($request_method)
-  {
-    case 'GET':
-      if(!empty($_GET["id"]))
-      {
-        // Récupérer un seul produit
-        $id = intval($_GET["id"]);
-        getTeammate($id);
-      }
-      else
-      {
-        // Récupérer tous les produits
-        getTeammates();
-      }
-      break;
-    default:
-      // Requête invalide
-      header("HTTP/1.0 405 Method Not Allowed");
-      break;
-    case 'POST':
-      // Ajouter une activite
-      AddTeammates();
-      break;
-      case 'PUT':
-      // Modifier un activite
-      $id = intval($_GET["id"]);
-      updateTeammate($id);
-      break;
-      case 'DELETE':
-        // Supprimer un produit
-        $idActivite = intval($_GET["idActivite"]);
-        $idUtilisateur = intval($_GET["idUtilisateur"]);
-        deleteTeammate($idActivite,$idUtilisateur);
-        break;
-    }
 
 ?>
