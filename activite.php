@@ -12,11 +12,16 @@
         $id = intval($_GET["id"]);
         getActivite($id);
       }
+      else if(!empty($_GET["idTeamLeader"])){
+        $idTeamLeader = $_GET["idTeamLeader"];
+        getActiviteTeamLeader($idTeamLeader);
+      }
       else
       {
         // Récupérer tous les produits
         getActivites();
       }
+
       break;
     default:
       // Requête invalide
@@ -82,7 +87,27 @@
 
     header('Content-Type: application/json');
 
-    print_r($response);
+    echo json_encode($response, JSON_PRETTY_PRINT);
+  }
+
+  function getActiviteTeamLeader($id=0)
+  {
+    global $conn;
+    $query = "SELECT * FROM activite";
+    if($id != 0)
+    {
+      $query .= " WHERE a_pour_team_leader_id=".$id;
+    }
+    $response = array();
+    $result = mysqli_query($conn, $query);
+
+    while($row = mysqli_fetch_assoc($result))
+    {
+      $response[] = $row;
+    }
+
+    header('Content-Type: application/json');
+
     echo json_encode($response, JSON_PRETTY_PRINT);
   }
 
@@ -151,7 +176,7 @@
     //$modified = date('Y-m-d H:i:s')
 
     //construire la requête SQL
-    $query="UPDATE activite SET titre='".$titre."', date='".$date."', heure_debut='".$heure_debut."', duree='".$heure_fin."', lieu='".$lieu."' , niveau='".$niveau."', nbr_participant='".$nbr_participant."', activite_terminee='".$activite_terminee."'WHERE id=".$id;
+    $query="UPDATE activite SET titre='".$titre."', date='".$date."', heure_debut='".$heure_debut."', heure_fin='".$heure_fin."', lieu='".$lieu."' , niveau='".$niveau."', nbr_participant='".$nbr_participant."', activite_terminee='".$activite_terminee."'WHERE id=".$id;
     
     if(mysqli_query($conn, $query))
     {
